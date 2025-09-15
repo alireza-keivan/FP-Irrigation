@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
 
-df_TH = pd.read_csv('/home/face/Export/TH_SMTC/TH/thingsboard_EM300-TH_2025-09-03.csv')
+df_TH = pd.read_csv('/home/.../thingsboard_EM300-TH_2025-09-03.csv')
 
 df_TH["timestamp"] = df_TH["timestamp"].astype("datetime64[ns]")
 df_TH = df_TH.sort_values(by='timestamp')
@@ -46,7 +46,6 @@ start_hour = max_sum_index
 end_hour = start_hour + window_size
 final_result = f"Hours {start_hour}-{end_hour} is the best time for irrigation."
 
-# Set up basic logging configuration
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -54,27 +53,21 @@ logging.basicConfig(
     filemode='a'
 )
 
-# Configuration from the user's provided JSON
 config = {
     "mqtt_settings": {
-        "MQTT_BROKER_ADDRESS": "192.168.45.115",
+        "MQTT_BROKER_ADDRESS": "192.168...",
         "MQTT_BROKER_PORT": 1883,
-        "MQTT_CLIENT_ID": "pp6orv9o8irhb2zesj0u",
-        "MQTT_USERNAME": "ewn59192f5g0o2whlg2j",
-        "MQTT_PASSWORD": "xof9fbjwptnk7ri769p8",
-        "MQTT_FACE_TOPIC": "v1/devices/me/telemetry"
+        "MQTT_CLIENT_ID": "...",
+        "MQTT_USERNAME": "...",
+        "MQTT_PASSWORD": "...",
+        "MQTT_FACE_TOPIC": "v1/.../telemetry"
     }
 }
 
-# The directory where the base64 JSON file is located
-
-# A dictionary to store the status of each message
 message_status = {}
 
-# Set to track successfully queued messages
 queued_messages = set()
 
-# Counter to track published messages
 pending_messages = 0
 
 # Reconnection attempts
@@ -82,13 +75,9 @@ MAX_RECONNECT_ATTEMPTS = 3
 RECONNECT_DELAY = 5  # seconds
 
 def on_connect(client, userdata, flags, rc):
-    """
-    Callback function to handle connection events.
-    """
     global pending_messages
     if rc == 0:
         logging.info("Connected to MQTT Broker successfully.")
-        # Publish images after successful connection or reconnection
         publish_images(client)
     else:
         logging.error(f"Failed to connect to MQTT Broker. Return code: {rc}.")
@@ -108,9 +97,6 @@ def on_connect(client, userdata, flags, rc):
         reconnect(client)
 
 def on_publish(client, userdata, mid):
-    """
-    Callback function to handle successful message publishing.
-    """
     global pending_messages
     if mid in message_status:
         message_info = message_status.pop(mid)
@@ -123,9 +109,7 @@ def on_publish(client, userdata, mid):
         client.disconnect()
 
 def on_disconnect(client, userdata, rc, properties=None, reason=None):
-    """
-    Callback function to handle disconnection events.
-    """
+    
     global pending_messages
     if rc != 0:
         logging.warning(f"⚠️ Disconnected from MQTT Broker unexpectedly. Return code: {rc}. Properties: {properties}. Reason: {reason}.")
@@ -134,9 +118,6 @@ def on_disconnect(client, userdata, rc, properties=None, reason=None):
         logging.info("Disconnected from MQTT Broker cleanly.")
 
 def reconnect(client):
-    """
-    Attempt to reconnect to the MQTT broker.
-    """
     global pending_messages
     attempt = 0
     while attempt < MAX_RECONNECT_ATTEMPTS:
@@ -153,12 +134,8 @@ def reconnect(client):
     client.disconnect()
 
 def publish_images(client):
-    """
-    Reads base64-encoded images from JSON file and publishes to MQTT.
-    """
     global message_status, pending_messages, queued_messages, final_result
     try:
-        # Simplified payload for ThingsBoard compatibility
         payload = {
             "suggestion": final_result
         }
@@ -178,21 +155,18 @@ def publish_images(client):
             logging.info(f"Message for '{final_result}' queued successfully with MID {mid}.")
         else:
             logging.error(f"❌ Failed to queue message for '{final_result}'. Result code: {result}.")
-        
-        # Delay to prevent overwhelming the broker
+            
         time.sleep(3)  # Increased to 3 seconds
         
     except Exception as e:
         logging.error(f"❌ An error occurred while processing or publishing '{final_result}': {e}")
  
-# Main execution
 if __name__ == "__main__":
     client = paho.Client(paho.CallbackAPIVersion.VERSION1, client_id=config['mqtt_settings']['MQTT_CLIENT_ID'])
     client.on_connect = on_connect
     client.on_publish = on_publish
     client.on_disconnect = on_disconnect
 
-    # Set username and password for connection
     client.username_pw_set(
         config['mqtt_settings']['MQTT_USERNAME'],
         config['mqtt_settings']['MQTT_PASSWORD']
@@ -209,13 +183,10 @@ if __name__ == "__main__":
         logging.error(f"❌ Failed to connect to MQTT broker: {e}")
         exit(1)
 
-    # Start the network loop
     client.loop_start()
     
-    # Keep the script running until all messages are published or disconnected
     last_ping = time.time()
     while client.is_connected() or pending_messages > 0:
-        # Send a keep-alive ping every 60 seconds
         if time.time() - last_ping > 60:
             try:
                 client.ping()
@@ -225,6 +196,5 @@ if __name__ == "__main__":
                 logging.error(f"Failed to send keep-alive ping: {e}")
         time.sleep(1)
     
-    # Stop the loop after publishing is complete
     client.loop_stop()
     client.disconnect()
