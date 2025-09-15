@@ -1,23 +1,26 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-df_TH = pd.read_csv('thingsboard_EM300-TH_2025-09-03.csv')
-df_SMTC = pd.read_csv('thingsboard_EM500-SMTC_2025-09-03.csv')
+df_TH = pd.read_csv('/home/alireza/Documents/anomaly-detection/thingsboard_EM300-TH-13-10.csv')
+df_SMTC = pd.read_csv('/home/alireza/Documents/anomaly-detection/thingsboard_EM500-SMTC_13-10.csv')
 import seaborn as sns
-df_TH["timestamp"] = df_TH["timestamp"].astype("datetime64[ns]")
-df_SMTC["timestamp"] = df_SMTC["timestamp"].astype("datetime64[ns]")
-df_merged = pd.merge_asof(df_SMTC, df_TH, on='timestamp', direction="nearest")
+df_TH["time(ns)"] = df_TH["time(ns)"].astype("datetime64[ns]")
+df_SMTC["time(ns)"] = df_SMTC["time(ns)"].astype("datetime64[ns]")
+df_SMTC = df_SMTC.rename({"temperature":"temperature-soil"}, axis=1)
+
+df_merged = pd.merge_asof(df_SMTC, df_TH, on='time(ns)', direction="nearest")
 
 df_merged['moisture'] = pd.to_numeric(df_merged['moisture'], errors='coerce')
 df_merged['humidity'] = pd.to_numeric(df_merged['humidity'], errors='coerce')
-df_merged['temperature(above-ground)'] = pd.to_numeric(df_merged['temperature(above-ground)'], errors='coerce')
+df_merged['temperature'] = pd.to_numeric(df_merged['temperature'], errors='coerce')
+df_merged['temperature-soil'] = pd.to_numeric(df_merged['temperature-soil'], errors='coerce')
 df_merged['ec'] = pd.to_numeric(df_merged['ec'], errors='coerce')
 
-df_merged['timestamp'] = pd.to_datetime(df_merged['timestamp'])
-df_merged['hour'] = df_merged['timestamp'].dt.hour
+df_merged['time(ns)'] = pd.to_datetime(df_merged['time(ns)'])
+df_merged['hour'] = df_merged['time(ns)'].dt.hour
 
 hourly_moisture = df_merged.groupby('hour')['moisture'].agg(['mean', 'max', 'min']).reset_index()
 hourly_humidity = df_merged.groupby('hour')['humidity'].agg(['mean', 'max', 'min']).reset_index()
-hourly_temperature = df_merged.groupby('hour')['temperature(above-ground)'].agg(['mean', 'max', 'min']).reset_index()
+hourly_temperature = df_merged.groupby('hour')['temperature'].agg(['mean', 'max', 'min']).reset_index()
 hourly_ec = df_merged.groupby('hour')['ec'].agg(['mean', 'max', 'min']).reset_index()
 sns.set_theme(style="whitegrid")
 plt.figure(figsize=(12, 7))
@@ -50,7 +53,7 @@ plt.savefig('main_plot.png')
 
 y = df_merged['humidity']
 x = df_merged['moisture']
-colors = df_merged['temperature(above-ground)']
+colors = df_merged['temperature']
 
 plt.scatter(x, y, c=colors, alpha=0.3, cmap = 'inferno')
 plt.xlabel("moisture")
