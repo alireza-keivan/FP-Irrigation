@@ -8,16 +8,7 @@ Designed to reduce unnecessary irrigation, improve water utilization, and provid
 
 </p>
 
----
-
-> **📷 HERO IMAGE**
->
-> Place:
->
-> `assets/https://github.com/alireza-keivan/FP-Irrigation/blob/alireza-keivan/assets/heroforirrigation.png`
->
-> *(Large professional banner showing a smart park with IoT sensors, environmental dashboard, and irrigation analytics.)*
-
+![Hero Banner](https://github.com/alireza-keivan/FP-Irrigation/blob/alireza-keivan/assets/heroforirrigation.png)
 ---
 
 # The Problem
@@ -54,12 +45,7 @@ to assist operators in making data-driven irrigation decisions.
 
 ---
 
-> **📷 SENSOR NETWORK IMAGE**
->
-> Place:
->
-> `assets/sensor-network.png`
->
+![Hero Banner](https://github.com/alireza-keivan/FP-Irrigation/blob/alireza-keivan/assets/milesight-sensors.png)
 > *(ESP32 devices, soil sensors, weather sensors, gateway, irrigation zones.)*
 
 ---
