@@ -8,8 +8,9 @@ Designed to reduce unnecessary irrigation, improve water utilization, and provid
 
 </p>
 
-![Hero Banner](https://github.com/alireza-keivan/FP-Irrigation/blob/alireza-keivan/assets/heroforirrigation.png)
----
+<p align="center">
+  <img src="https://raw.githubusercontent.com/alireza-keivan/FP-Irrigation/alireza-keivan/assets/heroforirrigation.png" alt="Hero Banner" width="700">
+</p>---
 
 # The Problem
 
