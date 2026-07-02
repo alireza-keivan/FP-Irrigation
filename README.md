@@ -151,13 +151,7 @@ The recommendation engine evaluates environmental conditions and determines irri
 Results are presented through visual reports and dashboards, allowing operators to quickly identify irrigation requirements.
 
 ---
-
-> **📷 WORKFLOW IMAGE**
->
-> Place:
->
-> `assets/workflow.png`
-
+![Hero Banner](https://github.com/alireza-keivan/FP-Irrigation/blob/alireza-keivan/assets/irrigation%20workflow.png)
 ---
 
 # Dashboard
