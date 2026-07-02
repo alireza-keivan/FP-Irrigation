@@ -17,7 +17,7 @@ hourly_humidity = df_TH.groupby('hour')['humidity'].agg(['mean', 'max', 'min']).
 hourly_temperature = df_TH.groupby('hour')['temperature'].agg(['mean', 'max', 'min']).reset_index()
 
 
-def output():
+def calculate_irrigation_priority():
     list_temperature = []
     list_humidity = []
     diff_temperature_humidity = []
