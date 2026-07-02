@@ -14,7 +14,7 @@ Designed to reduce unnecessary irrigation, improve water utilization, and provid
 >
 > Place:
 >
-> `assets/hero.png`
+> `assets/https://github.com/alireza-keivan/FP-Irrigation/blob/alireza-keivan/assets/heroforirrigation.png`
 >
 > *(Large professional banner showing a smart park with IoT sensors, environmental dashboard, and irrigation analytics.)*
 
